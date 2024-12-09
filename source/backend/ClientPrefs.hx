@@ -21,6 +21,8 @@ import states.TitleState;
 	public var lowQuality:Bool = false;
 	public var enableGC:Bool = true;
 	public var ffmpegMode:Bool = false;
+	public var unlockFPS:Bool = false;
+	public var targetFPS:Float = 60;
 	public var shaders:Bool = true;
 	public var cacheOnGPU:Bool = #if !switch false #else true #end; //From Stilic
 	public var framerate:Int = 60;

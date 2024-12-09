@@ -261,9 +261,25 @@ class PlayState extends MusicBeatState
 	public var startCallback:Void->Void = null;
 	public var endCallback:Void->Void = null;
 
+	// FFMpeg values :)
+	var ffmpegMode = ClientPrefs.data.ffmpegMode;
+	var unlockFPS = ClientPrefs.data.unlockFPS;
+	var targetFPS = ClientPrefs.data.targetFPS;
+
 	public static var nextReloadAll:Bool = false;
 	override public function create()
 	{
+
+		if (ffmpegMode) {
+			if (unlockFPS)
+			{
+				FlxG.updateFramerate = 1000;
+				FlxG.drawFramerate = 1000;
+			}
+			FlxG.fixedTimestep = true;
+			FlxG.animationTimeScale = ClientPrefs.data.framerate / targetFPS;
+		}
+
 		//trace('Playback Rate: ' + playbackRate);
 		Paths.clearStoredMemory();
 		if(nextReloadAll)
@@ -1196,6 +1212,7 @@ class PlayState extends MusicBeatState
 		FlxG.sound.music.time = time - Conductor.offset;
 		#if FLX_PITCH FlxG.sound.music.pitch = playbackRate; #end
 		FlxG.sound.music.play();
+		if (ffmpegMode) FlxG.sound.music.volume = 0;
 
 		if (Conductor.songPosition < vocals.length)
 		{
@@ -1211,6 +1228,7 @@ class PlayState extends MusicBeatState
 			#if FLX_PITCH opponentVocals.pitch = playbackRate; #end
 			opponentVocals.play();
 		}
+		if (ffmpegMode) vocals.volume = opponentVocals.volume = 0;
 		else opponentVocals.pause();
 		Conductor.songPosition = time;
 	}
@@ -1845,6 +1863,7 @@ class PlayState extends MusicBeatState
 		setOnScripts('botPlay', cpuControlled);
 		callOnScripts('onUpdatePost', [elapsed]);
 	}
+
 
 	// Health icon updaters
 	public dynamic function updateIconsScale(elapsed:Float)
@@ -3157,6 +3176,17 @@ class PlayState extends MusicBeatState
 		NoteSplash.configs.clear();
 		instance = null;
 		super.destroy();
+
+		if(ffmpegMode) {
+			if (FlxG.fixedTimestep) {
+				FlxG.fixedTimestep = false;
+				FlxG.animationTimeScale = 1;
+			}
+			if(unlockFPS) {
+				FlxG.drawFramerate = ClientPrefs.data.framerate;
+				FlxG.updateFramerate = ClientPrefs.data.framerate;
+			}
+		}
 	}
 
 	var lastStepHit:Int = -1;
@@ -3607,3 +3637,59 @@ class PlayState extends MusicBeatState
 	}
 	#end
 }
+
+	// Render mode stuff.. If SGWLC isn't ok with this I will remove it :thumbsup:
+
+	var process:Process;
+	var ffmpegExists:Bool = false;
+
+	private function initRender():Void
+	{
+		if (!FileSystem.exists(#if linux 'ffmpeg' #else 'ffmpeg.exe' #end))
+		{
+			trace("\"FFmpeg\" not found! (Is it in the same folder as HazelEngine?)");
+			return;
+		}
+
+		if(!FileSystem.exists('assets/gameRenders/')) { //In case you delete the gameRenders folder
+			trace ('gameRenders folder not found! Creating the gameRenders folder...');
+            FileSystem.createDirectory('assets/gameRenders');
+        }
+		else
+		if(!FileSystem.isDirectory('assets/gameRenders/')) {
+			FileSystem.deleteFile('assets/gameRenders/');
+			FileSystem.createDirectory('assets/gameRenders/');
+		} 
+
+		ffmpegExists = true;
+
+		process = new Process('ffmpeg', ['-v', 'quiet', '-y', '-f', 'rawvideo', '-pix_fmt', 'rgba', '-s', lime.app.Application.current.window.width + 'x' + lime.app.Application.current.window.height, '-r', '-i', '-', '-c:v', '-b', 'assets/gameRenders/' + Paths.formatToSongPath("render" + "_" + 1) + '.mp4']);
+		FlxG.autoPause = false;
+	}
+
+	private function pipeFrame():Void
+	{
+		if (!ffmpegExists || process == null)
+		return;
+
+		var img = lime.app.Application.current.window.readPixels(new lime.math.Rectangle(FlxG.scaleMode.offset.x, FlxG.scaleMode.offset.y, FlxG.scaleMode.gameSize.x, FlxG.scaleMode.gameSize.y));
+		var bytes = img.getPixels(new lime.math.Rectangle(0, 0, img.width, img.height));
+		process.stdin.writeBytes(bytes, 0, bytes.length);
+	}
+
+	function stopRender():Void
+	{
+		if (!ClientPrefs.data.ffmpegMode)
+			return;
+
+		if (process != null){
+			if (process.stdin != null)
+				process.stdin.close();
+
+			process.close();
+			process.kill();
+		}
+
+//		FlxG.autoPause = ClientPrefs.data.autoPause;
+	}
+
