@@ -2564,7 +2564,7 @@ class PlayState extends MusicBeatState
 			uiFolder = uiPrefix + "UI/";
 			antialias = !isPixelStage;
 		}
-
+		if(!cpuControlled) {
 		rating.loadGraphic(Paths.image(uiFolder + daRating.image + uiPostfix));
 		rating.screenCenter();
 		rating.x = placement - 40;
@@ -2655,6 +2655,7 @@ class PlayState extends MusicBeatState
 			},
 			startDelay: Conductor.crochet * 0.002 / playbackRate
 		});
+	}
 	}
 
 	public var strumsBlocked:Array<Bool> = [];

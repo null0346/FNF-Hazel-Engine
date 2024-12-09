@@ -11,6 +11,7 @@ class OptionsState extends MusicBeatState
 		'Adjust Delay and Combo',
 		'Graphics',
 		'Optimization',
+		'Rendering',
 		'Visuals',
 		'Gameplay'
 		#if TRANSLATIONS_ALLOWED , 'Language' #end
@@ -19,6 +20,9 @@ class OptionsState extends MusicBeatState
 	private static var curSelected:Int = 0;
 	public static var menuBG:FlxSprite;
 	public static var onPlayState:Bool = false;
+	private var mainCamera:FlxCamera;
+	private var subCamera:FlxCamera;
+	private var otherCamera:FlxCamera;
 
 	function openSelectedSubstate(label:String) {
 		switch(label)
@@ -33,6 +37,8 @@ class OptionsState extends MusicBeatState
 				openSubState(new options.VisualsSettingsSubState());
 			case 'Optimization':
 				openSubState(new options.OptimizeSettingsSubState());
+			case 'Rendering':
+				openSubState(new options.RenderingSubState());
 			case 'Gameplay':
 				openSubState(new options.GameplaySettingsSubState());
 			case 'Adjust Delay and Combo':
@@ -44,9 +50,26 @@ class OptionsState extends MusicBeatState
 
 	var selectorLeft:Alphabet;
 	var selectorRight:Alphabet;
+	var camFollow:FlxObject;
+	var camFollowPos:FlxObject;
 
 	override function create()
 	{
+		mainCamera = initPsychCamera();
+		subCamera = new FlxCamera();
+		otherCamera = new FlxCamera();
+		subCamera.bgColor.alpha = 0;
+		otherCamera.bgColor.alpha = 0;
+
+		FlxG.cameras.add(subCamera, false);
+		FlxG.cameras.add(otherCamera, false);
+
+		camFollow = new FlxObject(0, 0, 1, 1);
+		camFollowPos = new FlxObject(0, 0, 1, 1);
+		add(camFollow);
+		add(camFollowPos);
+		FlxG.cameras.list[FlxG.cameras.list.indexOf(subCamera)].follow(camFollowPos);
+
 		#if DISCORD_ALLOWED
 		DiscordClient.changePresence("Options Menu", null);
 		#end
@@ -73,6 +96,15 @@ class OptionsState extends MusicBeatState
 		selectorLeft = new Alphabet(0, 0, '>', true);
 		add(selectorLeft);
 		selectorRight = new Alphabet(0, 0, '<', true);
+		add(selectorRight);
+
+		selectorLeft = new Alphabet(0, 0, '>', true);
+		selectorLeft.scrollFactor.set(0, yScroll*1.5);
+		selectorLeft.cameras = [subCamera];
+		add(selectorLeft);
+		selectorRight = new Alphabet(0, 0, '<', true);
+		selectorRight.scrollFactor.set(0, yScroll*1.5);
+		selectorRight.cameras = [subCamera];
 		add(selectorRight);
 
 		changeSelection();
