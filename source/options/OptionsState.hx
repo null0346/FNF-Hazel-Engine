@@ -50,26 +50,9 @@ class OptionsState extends MusicBeatState
 
 	var selectorLeft:Alphabet;
 	var selectorRight:Alphabet;
-	var camFollow:FlxObject;
-	var camFollowPos:FlxObject;
 
 	override function create()
 	{
-		mainCamera = initPsychCamera();
-		subCamera = new FlxCamera();
-		otherCamera = new FlxCamera();
-		subCamera.bgColor.alpha = 0;
-		otherCamera.bgColor.alpha = 0;
-
-		FlxG.cameras.add(subCamera, false);
-		FlxG.cameras.add(otherCamera, false);
-
-		camFollow = new FlxObject(0, 0, 1, 1);
-		camFollowPos = new FlxObject(0, 0, 1, 1);
-		add(camFollow);
-		add(camFollowPos);
-		FlxG.cameras.list[FlxG.cameras.list.indexOf(subCamera)].follow(camFollowPos);
-
 		#if DISCORD_ALLOWED
 		DiscordClient.changePresence("Options Menu", null);
 		#end
@@ -96,15 +79,6 @@ class OptionsState extends MusicBeatState
 		selectorLeft = new Alphabet(0, 0, '>', true);
 		add(selectorLeft);
 		selectorRight = new Alphabet(0, 0, '<', true);
-		add(selectorRight);
-
-		selectorLeft = new Alphabet(0, 0, '>', true);
-		selectorLeft.scrollFactor.set(0, yScroll*1.5);
-		selectorLeft.cameras = [subCamera];
-		add(selectorLeft);
-		selectorRight = new Alphabet(0, 0, '<', true);
-		selectorRight.scrollFactor.set(0, yScroll*1.5);
-		selectorRight.cameras = [subCamera];
 		add(selectorRight);
 
 		changeSelection();
