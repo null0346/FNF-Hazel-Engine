@@ -1,4 +1,4 @@
-package source.options;
+package options;
 
 import states.MainMenuState;
 import backend.StageData;
@@ -10,6 +10,7 @@ class OptionsState extends MusicBeatState
 		'Controls',
 		'Adjust Delay and Combo',
 		'Graphics',
+		'Optimization',
 		'Visuals',
 		'Gameplay'
 		#if TRANSLATIONS_ALLOWED , 'Language' #end
@@ -31,7 +32,7 @@ class OptionsState extends MusicBeatState
 			case 'Visuals':
 				openSubState(new options.VisualsSettingsSubState());
 			case 'Optimization':
-				openSelectedSubstate(new options.OptimizeSettingsSubState());
+				openSubState(new options.OptimizeSettingsSubState());
 			case 'Gameplay':
 				openSubState(new options.GameplaySettingsSubState());
 			case 'Adjust Delay and Combo':

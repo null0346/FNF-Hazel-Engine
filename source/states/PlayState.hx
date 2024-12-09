@@ -499,6 +499,9 @@ class PlayState extends MusicBeatState
 			timeTxt.y += 3;
 		}
 
+		inline cpp.vm.Gc.enable(ClientPrefs.data.enableGC); //lagspike prevention
+		inline Paths.clearStoredMemory();
+
 		generateSong();
 
 		noteGroup.add(grpNoteSplashes);
