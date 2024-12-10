@@ -3651,14 +3651,14 @@ class PlayState extends MusicBeatState
 			return;
 		}
 
-		if(!FileSystem.exists('assets/gameRenders/')) { //In case you delete the gameRenders folder
+		if(!FileSystem.exists('assets/shared/gameRenders/')) { //In case you delete the gameRenders folder
 			trace ('gameRenders folder not found! Creating the gameRenders folder...');
-            FileSystem.createDirectory('assets/gameRenders');
+            FileSystem.createDirectory('assets/shared/gameRenders');
         }
 		else
-		if(!FileSystem.isDirectory('assets/gameRenders/')) {
-			FileSystem.deleteFile('assets/gameRenders/');
-			FileSystem.createDirectory('assets/gameRenders/');
+		if(!FileSystem.isDirectory('assets/shared/gameRenders/')) {
+			FileSystem.deleteFile('assets/shared/gameRenders/');
+			FileSystem.createDirectory('assets/shared/gameRenders/');
 		} 
 
 		ffmpegExists = true;
