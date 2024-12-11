@@ -69,7 +69,6 @@
 
 	<!-- Assets -->
 	<assets path="assets/fonts" />
-	<assets path="assets/gameRenders" />
 	<assets path="assets/shared"        exclude="*.ogg" if="web"/>
 	<assets path="assets/shared"        exclude="*.mp3" unless="web"/>
 	<assets path="assets/embed"         exclude="*.ogg" if="web" embed="true"/>

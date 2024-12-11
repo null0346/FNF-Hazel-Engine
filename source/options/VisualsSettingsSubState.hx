@@ -93,10 +93,10 @@ class VisualsSettingsSubState extends BaseOptionsMenu
 		addOption(option);
 
 		var option:Option = new Option('Show Info',
-		"This will show some info above the health bar.",
-		'gpInfo',
-		STRING,
-		['None', 'Rendered Notes', 'NPS']);
+			"This will show some info above the health bar.\nWork in progress, will have more soon.",
+			'gpInfo',
+			STRING,
+			['None', 'Rendered Notes']);
 		addOption(option);
 		
 		var option:Option = new Option('Time Bar:',

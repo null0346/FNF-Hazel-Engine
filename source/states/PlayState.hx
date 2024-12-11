@@ -86,6 +86,14 @@ class PlayState extends MusicBeatState
 		['Perfect!!', 1] //The value on this one isn't used actually, since Perfect is always "1"
 	];
 
+	public var nps:Float = 0;
+	public var maxNPS:Float = 0;
+	public var oppNPS:Float = 0;
+	public var maxOppNPS:Float = 0;
+
+	private var npsIncreased:Bool = false;
+	private var npsDecreased:Bool = false;
+
 	//event variables
 	private var isCameraOnForcedPos:Bool = false;
 
@@ -198,6 +206,7 @@ class PlayState extends MusicBeatState
 
 	public var botplaySine:Float = 0;
 	public var botplayTxt:FlxText;
+	public var infoTxt:FlxText;
 
 	public var iconP1:HealthIcon;
 	public var iconP2:HealthIcon;
@@ -279,7 +288,7 @@ class PlayState extends MusicBeatState
 			FlxG.fixedTimestep = true;
 			FlxG.animationTimeScale = ClientPrefs.data.framerate / targetFPS;
 		}
-
+		
 		//trace('Playback Rate: ' + playbackRate);
 		Paths.clearStoredMemory();
 		if(nextReloadAll)
@@ -573,10 +582,24 @@ class PlayState extends MusicBeatState
 		botplayTxt.setFormat(Paths.font("vcr.ttf"), 32, FlxColor.WHITE, CENTER, FlxTextBorderStyle.OUTLINE, FlxColor.BLACK);
 		botplayTxt.scrollFactor.set();
 		botplayTxt.borderSize = 1.25;
-		botplayTxt.visible = cpuControlled;
+		botplayTxt.visible = gpInfo = 'None';
 		uiGroup.add(botplayTxt);
 		if(ClientPrefs.data.downScroll)
 			botplayTxt.y = healthBar.y + 70;
+
+		infoTxt = new FlxText(400, healthBar.y - 120, FlxG.width - 800, 32);
+		infoTxt.setFormat(Paths.font("vcr.ttf"), 32, FlxColor.WHITE, CENTER, FlxTextBorderStyle.OUTLINE, FlxColor.BLACK);
+		infoTxt.scrollFactor.set();
+		infoTxt.borderSize = 1.25;
+		uiGroup.add(infoTxt);
+
+		switch(ClientPrefs.data.gpInfo)
+		{
+			case 'Rendered Notes': 
+				infoTxt.text = "Rendered Notes: " + formatNumber(notes.length);
+
+			default: 
+		}
 
 		uiGroup.cameras = [camHUD];
 		noteGroup.cameras = [camHUD];
