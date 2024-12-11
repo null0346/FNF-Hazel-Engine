@@ -91,6 +91,13 @@ class VisualsSettingsSubState extends BaseOptionsMenu
 			'hideHud',
 			BOOL);
 		addOption(option);
+
+		var option:Option = new Option('Show Info',
+		"This will show some info above the health bar.",
+		'gpInfo',
+		STRING,
+		['None', 'Rendered Notes', 'NPS']);
+		addOption(option);
 		
 		var option:Option = new Option('Time Bar:',
 			"What should the Time Bar display?",
