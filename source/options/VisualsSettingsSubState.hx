@@ -97,6 +97,12 @@ class VisualsSettingsSubState extends BaseOptionsMenu
 			'showRendered',
 			BOOL);
 		addOption(option);
+
+		var option:Option = new Option('Showcase Mode',
+			'If checked, botplay gets automatically enabled\nand HUD gets hidden.',
+			'showcase',
+			BOOL);
+		addOption(option);
 		
 		var option:Option = new Option('Time Bar:',
 			"What should the Time Bar display?",
