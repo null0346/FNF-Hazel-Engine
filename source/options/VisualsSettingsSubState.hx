@@ -92,10 +92,11 @@ class VisualsSettingsSubState extends BaseOptionsMenu
 			BOOL);
 		addOption(option);
 
-		var option:Option = new Option('Show Rendered Notes',
-			'If checked, shows the amount of rendered notes.',
-			'showRendered',
-			BOOL);
+		var option:Option = new Option('Show Info',
+			"Decides what type of info you want to show.\nRendered Notes option is heavily WIP.",
+			'gpInfo',
+			STRING,
+			['None', 'Notes Per Second', 'Rendered Notes']);
 		addOption(option);
 
 		var option:Option = new Option('Showcase Mode',

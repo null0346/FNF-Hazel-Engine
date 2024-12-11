@@ -18,6 +18,7 @@ import lime.utils.Assets;
 import openfl.utils.Assets as OpenFlAssets;
 import openfl.events.KeyboardEvent;
 import haxe.Json;
+import haxe.ds.IntMap;
 
 import cutscenes.DialogueBoxPsych;
 
@@ -206,7 +207,6 @@ class PlayState extends MusicBeatState
 
 	public var botplaySine:Float = 0;
 	public var botplayTxt:FlxText;
-	public var infoTxt:FlxText;
 
 	public var iconP1:HealthIcon;
 	public var iconP2:HealthIcon;
@@ -272,9 +272,9 @@ class PlayState extends MusicBeatState
 	public var startCallback:Void->Void = null;
 	public var endCallback:Void->Void = null;
 
-	//Rendered Notes Stuff
-	public var amountOfRenderedNotes:Float = 0;
-	public var maxRenderedNotes:Float = 0;
+	//Info Text Stuff
+	var infoTxt:FlxText;
+	var gpInfo = ClientPrefs.data.gpInfo;
 
 	// FFMpeg values :)
 	var ffmpegMode = ClientPrefs.data.ffmpegMode;
@@ -294,9 +294,6 @@ class PlayState extends MusicBeatState
 			FlxG.fixedTimestep = true;
 			FlxG.animationTimeScale = ClientPrefs.data.framerate / targetFPS;
 		}
-
-		if (ClientPrefs.data.showcase || ffmpegMode)
-			cpuControlled = true;
 		
 		//trace('Playback Rate: ' + playbackRate);
 		Paths.clearStoredMemory();
@@ -332,8 +329,10 @@ class PlayState extends MusicBeatState
 		instakillOnMiss = ClientPrefs.getGameplaySetting('instakill');
 		practiceMode = ClientPrefs.getGameplaySetting('practice');
 		cpuControlled = ClientPrefs.getGameplaySetting('botplay');
-		showcaseMode = ClientPrefs.data.showcase;
 		guitarHeroSustains = ClientPrefs.data.guitarHeroSustains;
+
+		if (ClientPrefs.data.showcase)
+			cpuControlled = true;
 
 		// var gameCam:FlxCamera = FlxG.camera;
 		camGame = initPsychCamera();
@@ -597,13 +596,12 @@ class PlayState extends MusicBeatState
 		if(ClientPrefs.data.downScroll)
 			botplayTxt.y = healthBar.y + 70;
 
-		infoTxt = new FlxText(400, healthBar.y - 120, FlxG.width - 800, 32);
+		infoTxt = new FlxText(0, ClientPrefs.data.downScroll ? healthBar.y + 64 : healthBar.y - 48, FlxG.width, "", 32);
 		infoTxt.setFormat(Paths.font("vcr.ttf"), 32, FlxColor.WHITE, CENTER, FlxTextBorderStyle.OUTLINE, FlxColor.BLACK);
 		infoTxt.scrollFactor.set();
 		infoTxt.borderSize = 1.25;
-		infoTxt.visible = ClientPrefs.data.showRendered;
-		infoTxt.text = 'Rendered Notes: ${formatNumber(amountOfRenderedNotes)}/${formatNumber(maxRenderedNotes)}';
-		uiGroup.add(infoTxt);
+		infoTxt.visible = true;
+		infoTxt.antialiasing = ClientPrefs.data.antialiasing;
 
 		uiGroup.cameras = [camHUD];
 		noteGroup.cameras = [camHUD];
@@ -1883,8 +1881,6 @@ class PlayState extends MusicBeatState
 					keysCheck();
 				else
 					playerDance();
-
-				amountOfRenderedNotes = 0;
 
 				if(notes.length > 0)
 				{

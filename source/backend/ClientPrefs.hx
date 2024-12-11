@@ -23,7 +23,7 @@ import states.TitleState;
 	public var ffmpegMode:Bool = false;
 	public var unlockFPS:Bool = false;
 	public var targetFPS:Float = 60;
-	public var showRendered:Bool = false;
+	public var gpInfo:String = 'None';
 	public var showcase:Bool = false;
 	public var shaders:Bool = true;
 	public var cacheOnGPU:Bool = #if !switch false #else true #end; //From Stilic
