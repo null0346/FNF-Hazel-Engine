@@ -270,6 +270,10 @@ class PlayState extends MusicBeatState
 	public var startCallback:Void->Void = null;
 	public var endCallback:Void->Void = null;
 
+	//Rendered Notes Stuff
+	public var amountOfRenderedNotes:Float = 0;
+	public var maxRenderedNotes:Float = 0;
+
 	// FFMpeg values :)
 	var ffmpegMode = ClientPrefs.data.ffmpegMode;
 	var unlockFPS = ClientPrefs.data.unlockFPS;
@@ -582,7 +586,7 @@ class PlayState extends MusicBeatState
 		botplayTxt.setFormat(Paths.font("vcr.ttf"), 32, FlxColor.WHITE, CENTER, FlxTextBorderStyle.OUTLINE, FlxColor.BLACK);
 		botplayTxt.scrollFactor.set();
 		botplayTxt.borderSize = 1.25;
-		botplayTxt.visible = gpInfo = 'None';
+		botplayTxt.visible = cpuControlled;
 		uiGroup.add(botplayTxt);
 		if(ClientPrefs.data.downScroll)
 			botplayTxt.y = healthBar.y + 70;
@@ -591,15 +595,9 @@ class PlayState extends MusicBeatState
 		infoTxt.setFormat(Paths.font("vcr.ttf"), 32, FlxColor.WHITE, CENTER, FlxTextBorderStyle.OUTLINE, FlxColor.BLACK);
 		infoTxt.scrollFactor.set();
 		infoTxt.borderSize = 1.25;
+		infoTxt.visible = ClientPrefs.data.showRendered;
+		infoTxt.text = 'Notes Rendered: ' + formatNumber(amountOfRenderedNotes) + ' / ' + formatNumber(maxRenderedNotes);
 		uiGroup.add(infoTxt);
-
-		switch(ClientPrefs.data.gpInfo)
-		{
-			case 'Rendered Notes': 
-				infoTxt.text = "Rendered Notes: " + formatNumber(notes.length);
-
-			default: 
-		}
 
 		uiGroup.cameras = [camHUD];
 		noteGroup.cameras = [camHUD];
@@ -983,6 +981,63 @@ class PlayState extends MusicBeatState
 		Paths.sound('intro2' + introSoundsSuffix);
 		Paths.sound('intro1' + introSoundsSuffix);
 		Paths.sound('introGo' + introSoundsSuffix);
+	}
+
+	public static function formatCompactNumber(number:Float):String
+		{
+			var suffixes1:Array<String> = ['ni', 'mi', 'bi', 'tri', 'quadri', 'quinti', 'sexti', 'septi', 'octi', 'noni'];
+			var tenSuffixes:Array<String> = ['', 'deci', 'viginti', 'triginti', 'quadraginti', 'quinquaginti', 'sexaginti', 'septuaginti', 'octoginti', 'nonaginti', 'centi'];
+			var decSuffixes:Array<String> = ['', 'un', 'duo', 'tre', 'quattuor', 'quin', 'sex', 'septe', 'octo', 'nove'];
+			var centiSuffixes:Array<String> = ['centi', 'ducenti', 'trecenti', 'quadringenti', 'quingenti', 'sescenti', 'septingenti', 'octingenti', 'nongenti'];
+	
+			var magnitude:Int = 0;
+			var num:Float = number;
+			var tenIndex:Int = 0;
+	
+			while (num >= 1000.0)
+			{
+				num /= 1000.0;
+	
+				if (magnitude == suffixes1.length - 1) {
+					tenIndex++;
+				}
+	
+				magnitude++;
+	
+				if (magnitude == 21) {
+					tenIndex++;
+					magnitude = 11;
+				}
+			}
+	
+			// Determine which set of suffixes to use
+			var suffixSet:Array<String> = (magnitude <= suffixes1.length) ? suffixes1 : ((magnitude <= suffixes1.length + decSuffixes.length) ? decSuffixes : centiSuffixes);
+	
+			// Use the appropriate suffix based on magnitude
+			var suffix:String = (magnitude <= suffixes1.length) ? suffixSet[magnitude - 1] : suffixSet[magnitude - 1 - suffixes1.length];
+			var tenSuffix:String = (tenIndex <= 10) ? tenSuffixes[tenIndex] : centiSuffixes[tenIndex - 11];
+	
+			// Use the floor value for the compact representation
+			var compactValue:Float = Math.floor(num * 100) / 100;
+	
+			if (compactValue <= 0.001) {
+				return "0"; // Return 0 if compactValue = null
+			} else {
+				var illionRepresentation:String = "";
+	
+				if (magnitude > 0) {
+					illionRepresentation += suffix + tenSuffix;
+				}
+	
+					if (magnitude > 1) illionRepresentation += "llion";
+	
+				return compactValue + (magnitude == 0 ? "" : " ") + (magnitude == 1 ? 'thousand' : illionRepresentation);
+			}
+		}
+
+	public static function formatNumber(number:Float, ?decimals:Bool = false):String //simplified number formatting
+	{
+		return (number < 10e11 ? FlxStringUtil.formatMoney(number, false) : formatCompactNumber(number));
 	}
 
 	public function startCountdown()
@@ -1822,6 +1877,8 @@ class PlayState extends MusicBeatState
 					keysCheck();
 				else
 					playerDance();
+
+				amountOfRenderedNotes = 0;
 
 				if(notes.length > 0)
 				{
