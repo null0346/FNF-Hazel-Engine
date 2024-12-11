@@ -3725,7 +3725,7 @@ class PlayState extends MusicBeatState
 	var process:Process;
 	var ffmpegExists:Bool = false;
 
-	private function initRender():Void
+	function initRender():Void
 	{
 		if (!FileSystem.exists(#if linux 'ffmpeg' #else 'ffmpeg.exe' #end))
 		{
@@ -3733,19 +3733,19 @@ class PlayState extends MusicBeatState
 			return;
 		}
 
-		if(!FileSystem.exists('assets/shared/gameRenders/')) { //In case you delete the gameRenders folder
+		if(!FileSystem.exists('assets/gameRenders/')) { //In case you delete the gameRenders folder
 			trace ('gameRenders folder not found! Creating the gameRenders folder...');
-            FileSystem.createDirectory('assets/shared/gameRenders');
+            FileSystem.createDirectory('assets/gameRenders/');
         }
 		else
-		if(!FileSystem.isDirectory('assets/shared/gameRenders/')) {
-			FileSystem.deleteFile('assets/shared/gameRenders/');
-			FileSystem.createDirectory('assets/shared/gameRenders/');
+		if(!FileSystem.isDirectory('assets/gameRenders/')) {
+			FileSystem.deleteFile('assets/gameRenders/');
+			FileSystem.createDirectory('assets/gameRenders/');
 		} 
 
 		ffmpegExists = true;
 
-		process = new Process('ffmpeg', ['-v', 'quiet', '-y', '-f', 'rawvideo', '-pix_fmt', 'rgba', '-s', lime.app.Application.current.window.width + 'x' + lime.app.Application.current.window.height, '-r', '-i', '-', '-c:v', '-b', 'assets/gameRenders/' + Paths.formatToSongPath("render" + "_" + 1) + '.mp4']);
+		process = new Process('ffmpeg', ['-v', 'quiet', '-y', '-f', 'rawvideo', '-pix_fmt', 'rgba', '-s', lime.app.Application.current.window.width + 'x' + lime.app.Application.current.window.height, '-r', '-i', '-', '-c:v', '-b', 'assets/gameRenders/' + Paths.formatToSongPath('render') + '.mp4']);
 		FlxG.autoPause = false;
 	}
 
