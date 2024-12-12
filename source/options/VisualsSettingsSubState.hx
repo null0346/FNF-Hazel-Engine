@@ -92,13 +92,13 @@ class VisualsSettingsSubState extends BaseOptionsMenu
 			BOOL);
 		addOption(option);
 
-		var option:Option = new Option('Show Info',
+/*		var option:Option = new Option('Show Info',
 			"Decides what type of info you want to show.\nRendered Notes option is heavily WIP.",
 			'gpInfo',
 			STRING,
 			['None', 'Notes Per Second', 'Rendered Notes']);
 		addOption(option);
-
+*/
 		var option:Option = new Option('Showcase Mode',
 			'If checked, botplay gets automatically enabled\nand HUD gets hidden.',
 			'showcase',

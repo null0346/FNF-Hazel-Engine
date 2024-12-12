@@ -286,6 +286,7 @@ class PlayState extends MusicBeatState
 	{
 
 		if (ffmpegMode) {
+			initRender();
 			if (unlockFPS)
 			{
 				FlxG.updateFramerate = 1000;
@@ -294,7 +295,7 @@ class PlayState extends MusicBeatState
 			FlxG.fixedTimestep = true;
 			FlxG.animationTimeScale = ClientPrefs.data.framerate / targetFPS;
 		}
-		
+
 		//trace('Playback Rate: ' + playbackRate);
 		Paths.clearStoredMemory();
 		if(nextReloadAll)
@@ -587,12 +588,14 @@ class PlayState extends MusicBeatState
 		updateScore(false);
 		uiGroup.add(scoreTxt);
 
-		botplayTxt = new FlxText(400, healthBar.y - 90, FlxG.width - 800, Language.getPhrase("Botplay").toUpperCase(), 32);
+		botplayTxt = new FlxText(400, healthBar.y - 90, FlxG.width - 800, "BOTPLAY", 32);
 		botplayTxt.setFormat(Paths.font("vcr.ttf"), 32, FlxColor.WHITE, CENTER, FlxTextBorderStyle.OUTLINE, FlxColor.BLACK);
 		botplayTxt.scrollFactor.set();
 		botplayTxt.borderSize = 1.25;
 		botplayTxt.visible = cpuControlled && ClientPrefs.data.showcase;
 		uiGroup.add(botplayTxt);
+		if(ClientPrefs.data.ffmpegMode)
+			botplayTxt.text = "Rendering";
 		if(ClientPrefs.data.downScroll)
 			botplayTxt.y = healthBar.y + 70;
 
@@ -1946,7 +1949,6 @@ class PlayState extends MusicBeatState
 		callOnScripts('onUpdatePost', [elapsed]);
 	}
 
-
 	// Health icon updaters
 	public dynamic function updateIconsScale(elapsed:Float)
 	{
@@ -3246,6 +3248,17 @@ class PlayState extends MusicBeatState
 
 		FlxG.stage.removeEventListener(KeyboardEvent.KEY_DOWN, onKeyPress);
 		FlxG.stage.removeEventListener(KeyboardEvent.KEY_UP, onKeyRelease);
+		
+		if(ffmpegMode) {
+			if (FlxG.fixedTimestep) {
+				FlxG.fixedTimestep = false;
+				FlxG.animationTimeScale = 1;
+			}
+			if(unlockFPS) {
+				FlxG.drawFramerate = ClientPrefs.data.framerate;
+				FlxG.updateFramerate = ClientPrefs.data.framerate;
+			}
+		}
 
 		FlxG.camera.setFilters([]);
 
@@ -3258,17 +3271,6 @@ class PlayState extends MusicBeatState
 		NoteSplash.configs.clear();
 		instance = null;
 		super.destroy();
-
-		if(ffmpegMode) {
-			if (FlxG.fixedTimestep) {
-				FlxG.fixedTimestep = false;
-				FlxG.animationTimeScale = 1;
-			}
-			if(unlockFPS) {
-				FlxG.drawFramerate = ClientPrefs.data.framerate;
-				FlxG.updateFramerate = ClientPrefs.data.framerate;
-			}
-		}
 	}
 
 	var lastStepHit:Int = -1;
