@@ -90,6 +90,9 @@ class MainMenuState extends MusicBeatState
 		var psychVer:FlxText = new FlxText(12, FlxG.height - 44, 0, "Hazel Engine v" + psychEngineVersion, 12);
 		psychVer.scrollFactor.set();
 		psychVer.setFormat("VCR OSD Mono", 16, FlxColor.WHITE, LEFT, FlxTextBorderStyle.OUTLINE, FlxColor.BLACK);
+		var psychVe1r:FlxText = new FlxText(12, FlxG.height - 44, 0, "Psych Engine v0.7.3", 12); // did not want to add a new variable
+		psychVe1r.scrollFactor.set();
+		psychVe1r.setFormat("VCR OSD Mono", 16, FlxColor.WHITE, LEFT, FlxTextBorderStyle.OUTLINE, FlxColor.BLACK);
 		add(psychVer);
 		var fnfVer:FlxText = new FlxText(12, FlxG.height - 24, 0, "Friday Night Funkin' v" + Application.current.meta.get('version'), 12);
 		fnfVer.scrollFactor.set();
