@@ -1074,6 +1074,11 @@ class PlayState extends MusicBeatState
 			timeTxt.y += 3;
 		}
 
+		if(ClientPrefs.showcaseMode = true)
+		{
+			cpuControlled = true;
+		}
+
 		var splash:NoteSplash = new NoteSplash(100, 100, 0);
 		grpNoteSplashes.add(splash);
 		splash.alpha = 0.0;
