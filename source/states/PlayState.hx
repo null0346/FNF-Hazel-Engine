@@ -2206,6 +2206,24 @@ class PlayState extends MusicBeatState
 				FlxG.sound.play(Paths.sound(value1), flValue2);
 		}
 
+		case 'Set Scroll Speed':
+				if (songSpeedType != "constant")
+				{
+					if(flValue1 == null) flValue1 = 1;
+					if(flValue2 == null) flValue2 = 0;
+
+					var newValue:Float = SONG.speed = flValue1;
+					if(flValue2 <= 0)
+						songSpeed = newValue;
+					else
+						songSpeedTween = FlxTween.tween(this, {songSpeed: newValue}, flValue2 / playbackRate, {ease: FlxEase.linear, onComplete:
+							function (twn:FlxTween)
+							{
+								songSpeedTween = null;
+							}
+						});
+				}
+
 		stagesFunc(function(stage:BaseStage) stage.eventCalled(eventName, value1, value2, flValue1, flValue2, strumTime));
 		callOnScripts('onEvent', [eventName, value1, value2, strumTime]);
 	}
