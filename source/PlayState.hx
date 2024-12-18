@@ -316,6 +316,11 @@ class PlayState extends MusicBeatState
 	private var keysArray:Array<Dynamic>;
 	private var controlArray:Array<String>;
 
+	//ffmpeg rendering values :3
+	var ffmpegMode = ClientPrefs.ffmpegMode;
+	var targetFPS = ClientPrefs.targetFPS;
+	var unlockFPS = ClientPrefs.unlockFPS;
+
 	var precacheList:Map<String, String> = new Map<String, String>();
 	
 	// stores the last judgement object
