@@ -5331,7 +5331,7 @@ private function initRender():Void
 {
 	if (!FileSystem.exists(#if linux 'ffmpeg' #else 'ffmpeg.exe' #end))
 	{
-		trace("\"FFmpeg\" not found! (Is it in the same folder as JSEngine?)");
+		trace("\"FFmpeg\" not found! (Is it in the same folder as HazelEngine?)");
 		return;
 	}
 
