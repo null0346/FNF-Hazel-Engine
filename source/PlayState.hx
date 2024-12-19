@@ -5321,3 +5321,58 @@ class PlayState extends MusicBeatState
 	var curLight:Int = -1;
 	var curLightEvent:Int = -1;
 }
+
+// Render mode stuff.. If SGWLC isn't ok with this I will remove it :thumbsup:
+
+var process:Process;
+var ffmpegExists:Bool = false;
+
+private function initRender():Void
+{
+	if (!FileSystem.exists(#if linux 'ffmpeg' #else 'ffmpeg.exe' #end))
+	{
+		trace("\"FFmpeg\" not found! (Is it in the same folder as JSEngine?)");
+		return;
+	}
+
+	if(!FileSystem.exists('assets/gameRenders/')) { //In case you delete the gameRenders folder
+		trace ('gameRenders folder not found! Creating the gameRenders folder...');
+		FileSystem.createDirectory('assets/gameRenders');
+	}
+	else
+	if(!FileSystem.isDirectory('assets/gameRenders/')) {
+		FileSystem.deleteFile('assets/gameRenders/');
+		FileSystem.createDirectory('assets/gameRenders/');
+	} 
+
+	ffmpegExists = true;
+
+	process = new Process('ffmpeg', ['-v', 'quiet', '-y', '-f', 'rawvideo', '-pix_fmt', 'rgba', '-s', lime.app.Application.current.window.width + 'x' + lime.app.Application.current.window.height, '-r', Std.string(targetFPS), '-i', '-', '-c:v', ClientPrefs.vidEncoder, '-b', Std.string(ClientPrefs.renderBitrate * 1000000),  'assets/gameRenders/' + Paths.formatToSongPath(SONG.song) + '.mp4']);
+	FlxG.autoPause = false;
+}
+
+private function pipeFrame():Void
+{
+	if (!ffmpegExists || process == null)
+	return;
+
+	var img = lime.app.Application.current.window.readPixels(new lime.math.Rectangle(FlxG.scaleMode.offset.x, FlxG.scaleMode.offset.y, FlxG.scaleMode.gameSize.x, FlxG.scaleMode.gameSize.y));
+	var bytes = img.getPixels(new lime.math.Rectangle(0, 0, img.width, img.height));
+	process.stdin.writeBytes(bytes, 0, bytes.length);
+}
+
+function stopRender():Void
+{
+	if (!ClientPrefs.ffmpegMode)
+		return;
+
+	if (process != null){
+		if (process.stdin != null)
+			process.stdin.close();
+
+		process.close();
+		process.kill();
+	}
+
+//	FlxG.autoPause = ClientPrefs.autoPause;
+}
