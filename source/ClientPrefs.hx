@@ -7,45 +7,64 @@ import flixel.graphics.FlxGraphic;
 import Controls;
 
 class ClientPrefs {
-	public static var openDoor:String = '!';
+	public static var openDoor:String = '!'; // thanks for the idea hrk
+
+	// Gameplay Settings
 	public static var downScroll:Bool = false;
 	public static var middleScroll:Bool = false;
+	public static var ghostTapping:Bool = true;
+	public static var controllerMode:Bool = false;
+	public static var hitsoundVolume:Float = 0;
 	public static var opponentStrums:Bool = true;
+	public static var noReset:Bool = false;
+	public static var comboOffset:Array<Int> = [0, 0, 0, 0];
+	public static var ratingOffset:Int = 0;
+	public static var sickWindow:Int = 45;
+	public static var goodWindow:Int = 90;
+	public static var badWindow:Int = 135;
+	public static var safeFrames:Float = 10;
+
+	// Visuals and UI Settings
 	public static var showFPS:Bool = true;
 	public static var flashing:Bool = true;
-	public static var globalAntialiasing:Bool = true;
 	public static var noteSplashes:Bool = true;
-	public static var lowQuality:Bool = false;
-	public static var shaders:Bool = true;
-	public static var framerate:Int = 60;
-	public static var cursing:Bool = true;
-	public static var violence:Bool = true;
 	public static var camZooms:Bool = true;
 	public static var hideHud:Bool = false;
 	public static var showcaseMode:Bool = false;
+	public static var pauseMusic:String = 'Tea Time';
+	public static var checkForUpdates:Bool = true;
+	public static var comboStacking = true;
+	public static var timeBarType:String = 'Time Left';
+	public static var scoreZoom:Bool = true;
+	public static var healthBarAlpha:Float = 1;
 
-	//Rendering Settings
+	// Graphics Settings
+	public static var globalAntialiasing:Bool = true;
+	public static var lowQuality:Bool = false;
+	public static var shaders:Bool = true;
+	public static var framerate:Int = 60;
+
+	// Rendering Settings
 	public static var ffmpegMode:Bool = false;
 	public static var targetFPS:Float = 60;
 	public static var unlockFPS:Bool = false;
 	public static var renderBitrate:Float = 5.0;
 	public static var vidEncoder:String = 'libx264';
 
-	//Optimizations
+	// Optimizations
 	public static var enableGC:Bool = false;
 
+	// Unused
+	public static var cursing:Bool = true;
+	public static var violence:Bool = true;
+
+	// Note Offsets
 	public static var noteOffset:Int = 0;
+
+	// Arrow Colors
 	public static var arrowHSV:Array<Array<Int>> = [[0, 0, 0], [0, 0, 0], [0, 0, 0], [0, 0, 0]];
-	public static var ghostTapping:Bool = true;
-	public static var timeBarType:String = 'Time Left';
-	public static var scoreZoom:Bool = true;
-	public static var noReset:Bool = false;
-	public static var healthBarAlpha:Float = 1;
-	public static var controllerMode:Bool = false;
-	public static var hitsoundVolume:Float = 0;
-	public static var pauseMusic:String = 'Tea Time';
-	public static var checkForUpdates:Bool = true;
-	public static var comboStacking = true;
+
+	// Gameplay Changers
 	public static var gameplaySettings:Map<String, Dynamic> = [
 		'scrollspeed' => 1.0,
 		'scrolltype' => 'multiplicative', 
@@ -66,13 +85,6 @@ class ClientPrefs {
 		'botplay' => false,
 		'opponentplay' => false
 	];
-
-	public static var comboOffset:Array<Int> = [0, 0, 0, 0];
-	public static var ratingOffset:Int = 0;
-	public static var sickWindow:Int = 45;
-	public static var goodWindow:Int = 90;
-	public static var badWindow:Int = 135;
-	public static var safeFrames:Float = 10;
 
 	//Every key has two binds, add your key bind down here and then add your control on options/ControlsSubState.hx and Controls.hx
 	public static var keyBinds:Map<String, Array<FlxKey>> = [
