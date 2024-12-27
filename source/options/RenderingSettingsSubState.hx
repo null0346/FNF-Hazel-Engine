@@ -36,6 +36,13 @@ class GraphicsSettingsSubState extends BaseOptionsMenu
 		title = 'Rendering';
 		rpcTitle = 'Rendering Settings Menu'; //for Discord Rich Presence
 
+		var option:Option = new Option('WORK IN PROGRESS',
+			"Some things might cause crashes.\nMake changes at your own risk.",
+			'openDoor',
+			'string',
+			['!']);
+		addOption(option);
+
 		var option:Option = new Option('Rendering Mode', //Name
 			'If checked, the game can render songs,\n making it easier to showcase Bambi Spamtracks.', //Description
 			'ffmpegMode', //Save data variable name

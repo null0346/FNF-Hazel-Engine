@@ -49,7 +49,7 @@ class VisualsUISubState extends BaseOptionsMenu
 		addOption(option);
 
 		var option:Option = new Option('Showcase Mode',
-			'If checked, enables botplay and does the same\nthing as Hide HUD.',
+			'If checked, enables botplay and does the same thing as Hide HUD.', // what was i thinking when adding a \n instead of space in between same and thing
 			'showcaseMode',
 			'bool',
 			false);
