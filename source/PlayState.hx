@@ -221,6 +221,9 @@ class PlayState extends MusicBeatState
 	var dialogue:Array<String> = ['blah blah blah', 'coolswag'];
 	var dialogueJson:DialogueFile = null;
 
+	var EngineWatermark:FlxText;
+	var InfoTxt:FlxText;
+
 	var dadbattleBlack:BGSprite;
 	var dadbattleLight:BGSprite;
 	var dadbattleSmokes:FlxSpriteGroup;
@@ -1171,6 +1174,48 @@ class PlayState extends MusicBeatState
 		add(botplayTxt);
 		if(ClientPrefs.downScroll) {
 			botplayTxt.y = timeBarBG.y - 78;
+		}
+
+		EngineWatermark = new FlxText(4,FlxG.height * 0.9 + 50,0,"", 16);
+		EngineWatermark.setFormat(Paths.font("vcr.ttf"), 16, FlxColor.WHITE, RIGHT, OUTLINE,FlxColor.BLACK);
+		EngineWatermark.scrollFactor.set();
+		add(EngineWatermark);
+
+		switch(ClientPrefs.watermarkStyle)
+		{
+			case 'None': // do nothing
+			case 'Hazel Engine': 
+				EngineWatermark.text = SONG.song + " // " + "Hazel Engine v" + MainMenuState.psychEngineVersion;
+				EngineWatermark.x = FlxG.width - EngineWatermark.width - 5;
+			case 'Dave and Bambi':
+				EngineWatermark.text = SONG.song;
+			case 'Strident Crisis': 
+				EngineWatermark.text = SONG.song + " - " + CoolUtil.difficultyString() + " - Hazel Engine v" + MainMenuState.psychEngineVersion;
+			case 'OS "Engine"': 
+				EngineWatermark.text = SONG.song + " (" + CoolUtil.difficultyString() + ") " + "| HZ " + MainMenuState.psychEngineVersion;
+				EngineWatermark.x = FlxG.width - EngineWatermark.width - 5;
+
+
+			default: 
+		}
+
+		InfoTxt = new FlxText(400, timeBarBG.y + 27.5, FlxG.width - 800, "", 32);
+		InfoTxt.setFormat(Paths.font("vcr.ttf"), 16, FlxColor.WHITE, RIGHT, OUTLINE,FlxColor.BLACK);
+		InfoTxt.scrollFactor.set();
+		add(InfoTxt);
+
+		switch(ClientPrefs.infoText)
+		{
+			case 'None': // do nothing
+			case 'Scroll Speed': 
+				InfoTxt.text = "Scroll Speed: " + songSpeed;
+			case 'BPM':
+				InfoTxt.text = SONG.bpm;
+			case 'Scroll Speed + BPM': 
+				InfoTxt.text = "BPM: " + SONG.bpm + "\nScroll Speed: " + songSpeed;
+
+
+			default: 
 		}
 
 		strumLineNotes.cameras = [camHUD];
@@ -5320,6 +5365,7 @@ class PlayState extends MusicBeatState
 
 	var curLight:Int = -1;
 	var curLightEvent:Int = -1;
+}
 }
 
 // Render mode stuff.. If SGWLC isn't ok with this I will remove it :thumbsup:

@@ -9,7 +9,7 @@ import Controls;
 class ClientPrefs {
 	public static var openDoor:String = '!'; // thanks for the idea hrk
 
-	// Gameplay Settings
+	// Gameplay
 	public static var downScroll:Bool = false;
 	public static var middleScroll:Bool = false;
 	public static var ghostTapping:Bool = true;
@@ -24,7 +24,7 @@ class ClientPrefs {
 	public static var badWindow:Int = 135;
 	public static var safeFrames:Float = 10;
 
-	// Visuals and UI Settings
+	// Visuals and UI
 	public static var showFPS:Bool = true;
 	public static var flashing:Bool = true;
 	public static var noteSplashes:Bool = true;
@@ -38,18 +38,22 @@ class ClientPrefs {
 	public static var scoreZoom:Bool = true;
 	public static var healthBarAlpha:Float = 1;
 
-	// Graphics Settings
+	// Graphics
 	public static var globalAntialiasing:Bool = true;
 	public static var lowQuality:Bool = false;
 	public static var shaders:Bool = true;
 	public static var framerate:Int = 60;
 
-	// Rendering Settings
+	// Rendering (unused for until i get rendering to actually work)
 	public static var ffmpegMode:Bool = false;
 	public static var targetFPS:Float = 60;
 	public static var unlockFPS:Bool = false;
 	public static var renderBitrate:Float = 5.0;
 	public static var vidEncoder:String = 'libx264';
+
+	// Customization
+	public static var watermarkStyle:String = 'Hazel Engine';
+	public static var infoText:String = 'None';
 
 	// Optimizations
 	public static var enableGC:Bool = false;
