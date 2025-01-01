@@ -5370,7 +5370,7 @@ class PlayState extends MusicBeatState
 
 // Render mode stuff.. If SGWLC isn't ok with this I will remove it :thumbsup:
 
-var process:Process;
+/* var process:Process;
 var ffmpegExists:Bool = false;
 
 private function initRender():Void
@@ -5422,3 +5422,4 @@ function stopRender():Void
 
 //	FlxG.autoPause = ClientPrefs.autoPause;
 }
+*/
